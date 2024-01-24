@@ -8,6 +8,9 @@ class ResConfigSettings(models.TransientModel):
 
     _inherit = "res.config.settings"
 
+    stock_request_check_available_first = fields.Boolean(
+        string="Check available stock first"
+    )
     create_new_line_at_contract_line_renew = fields.Boolean(
         related="company_id.create_new_line_at_contract_line_renew",
         readonly=False,
