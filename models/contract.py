@@ -402,7 +402,7 @@ class ContractContract(models.Model):
         new_lines._onchange_is_auto_renew()
         return new_lines
 
-    def _prepare_invoice(self, date_invoice, journal=None):
+    def _prepare_receipt(self, date_invoice, journal=None):
         """Prepare in a Form the values for the generated invoice record.
 
         :return: A tuple with the vals dictionary and the Form with the
@@ -432,13 +432,13 @@ class ContractContract(models.Model):
                     "company": self.company_id.name or "",
                 }
             )
-        invoice_type = "out_invoice"
+        receipt_type = "out_receipt"
         if self.contract_type == "purchase":
-            invoice_type = "in_invoice"
+            receipt_type = "in_receipt"
         move_form = Form(
             self.env["account.move"]
             .with_company(self.company_id)
-            .with_context(default_move_type=invoice_type, default_name="/"),
+            .with_context(default_move_type=receipt_type, default_name="/"),
             view="contract.view_account_move_contract_helper_form",
         )
         move_form.partner_id = self.invoice_partner_id
@@ -449,7 +449,7 @@ class ContractContract(models.Model):
             move_form.invoice_payment_term_id = self.payment_term_id
         if self.fiscal_position_id:
             move_form.fiscal_position_id = self.fiscal_position_id
-        if invoice_type == "out_invoice" and self.user_id:
+        if receipt_type == "out_receipt" and self.user_id:
             move_form.invoice_user_id = self.user_id
         invoice_vals = move_form._values_to_save(all_fields=True)
         invoice_vals.update(
@@ -569,6 +569,40 @@ class ContractContract(models.Model):
             del invoice_vals["line_ids"]
             contract_lines._update_recurring_next_date()
         return invoices_values
+    
+    def _prepare_recurring_receipts_values(self, date_ref=False):
+        """
+        This method builds the list of invoices values to create, based on
+        the lines to invoice of the contracts in self.
+        !!! The date of next invoice (recurri   ng_next_date) is updated here !!!
+        :return: list of dictionaries (invoices values)
+        """
+        invoices_values = []
+        for contract in self:
+            if not date_ref:
+                date_ref = contract.recurring_next_date
+            if not date_ref:
+                # this use case is possible when recurring_create_invoice is
+                # called for a finished contract
+                continue
+            contract_lines = contract._get_lines_to_invoice(date_ref)
+            if not contract_lines:
+                continue
+            invoice_vals, move_form = contract._prepare_invoice(date_ref)
+            invoice_vals["invoice_line_ids"] = []
+            for line in contract_lines:
+                invoice_line_vals = line._prepare_invoice_line(move_form=move_form)
+                if invoice_line_vals:
+                    # Allow extension modules to return an empty dictionary for
+                    # nullifying line. We should then cleanup certain values.
+                    del invoice_line_vals["company_id"]
+                    del invoice_line_vals["company_currency_id"]
+                    invoice_vals["invoice_line_ids"].append((0, 0, invoice_line_vals))
+            invoices_values.append(invoice_vals)
+            # Force the recomputation of journal items
+            del invoice_vals["line_ids"]
+            contract_lines._update_recurring_next_date()
+        return invoices_values
 
     def recurring_create_invoice(self):
         """
@@ -632,6 +666,14 @@ class ContractContract(models.Model):
         self._invoice_followers(moves)
         self._compute_recurring_next_date()
         return moves
+    
+    def _recurring_create_receipt(self, date_ref=False):
+        receipts_values = self._prepare_recurring_receipt_values(date_ref)
+        receipts = self.env["account.move"].create(receipts_values)
+        self._add_contract_origin(receipts)
+        self._invoice_followers(receipts)
+        self._compute_recurring_next_date()
+        return receipts
 
     @api.model
     def _get_recurring_create_func(self, create_type="invoice"):
@@ -641,6 +683,8 @@ class ContractContract(models.Model):
         """
         if create_type == "invoice":
             return self.__class__._recurring_create_invoice
+        elif create_type == "receipt":
+            return self.__class__._recurring_create_receipt
 
     @api.model
     def _cron_recurring_create(self, date_ref=False, create_type="invoice"):

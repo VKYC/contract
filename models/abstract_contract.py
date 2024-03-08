@@ -56,7 +56,7 @@ class ContractAbstractContract(models.AbstractModel):
 
     @api.model
     def _selection_generation_type(self):
-        return [("invoice", "Invoice")]
+        return [("invoice", "Invoice"), ('receipt', 'Receipt')]
 
     @api.model
     def _default_generation_type(self):
