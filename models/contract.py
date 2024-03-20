@@ -302,6 +302,29 @@ class ContractContract(models.Model):
         if tree_view and form_view:
             action["views"] = [(tree_view.id, "tree"), (form_view.id, "form")]
         return action
+    
+    def action_show_receipts(self):
+        self.ensure_one()
+        tree_view = self.env.ref("account.view_invoice_tree", raise_if_not_found=False)
+        form_view = self.env.ref("account.view_move_form", raise_if_not_found=False)
+        ctx = dict(self.env.context)
+        if ctx.get("default_contract_type"):
+            ctx["default_move_type"] = (
+                "out_receipt"
+                if ctx.get("default_contract_type") == "sale"
+                else "in_receipt"
+            )
+        action = {
+            "type": "ir.actions.act_window",
+            "name": "Invoices",
+            "res_model": "account.move",
+            "view_mode": "tree,kanban,form,calendar,pivot,graph,activity",
+            "domain": [("id", "in", self._get_related_invoices().ids)],
+            "context": ctx,
+        }
+        if tree_view and form_view:
+            action["views"] = [(tree_view.id, "tree"), (form_view.id, "form")]
+        return action
 
     @api.depends("contract_line_ids.date_end")
     def _compute_date_end(self):
