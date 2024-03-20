@@ -37,6 +37,7 @@ class ContractAbstractContract(models.AbstractModel):
         readonly=False,
         index=True,
     )
+    journal_account_id = fields.Many2one(related='journal_id.default_account_id', string='Cuenta')
     company_id = fields.Many2one(
         "res.company",
         string="Company",

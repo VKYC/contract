@@ -13,6 +13,7 @@
                     <group name="group_main_left">
                         <field name="contract_type" />
                         <field name="journal_id" />
+                        <field name="journal_account_id" />
                         <field name="pricelist_id" />
                         <field
                             name="company_id"

@@ -50,6 +50,7 @@
                             <field name="contract_type" invisible="1" required="1"/>
                             <field name="fiscal_position_id" attrs="{'readonly': [('is_terminated','=',True)]}"/>
                             <field name="journal_id" required="1" attrs="{'readonly': [('is_terminated','=',True)]}"/>
+                            <field name="journal_account_id" />
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </group>
                     </group>
