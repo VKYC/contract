@@ -726,7 +726,7 @@ class ContractContract(models.Model):
         return moves
     
     def _recurring_create_receipt(self, date_ref=False):
-        receipts_values = self._prepare_recurring_receipt_values(date_ref)
+        receipts_values = self._prepare_recurring_receipts_values(date_ref)
         receipts = self.env["account.move"].create(receipts_values)
         self._add_contract_origin(receipts)
         self._invoice_followers(receipts)
@@ -775,7 +775,7 @@ class ContractContract(models.Model):
 
     @api.model
     def cron_recurring_create_invoice(self, date_ref=None):
-        return self._cron_recurring_create(date_ref, create_type="invoice")
+        return self._cron_recurring_create(date_ref, create_type="invoice") and self._cron_recurring_create(date_ref, create_type="receipt")
 
     def action_terminate_contract(self):
         self.ensure_one()
