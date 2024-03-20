@@ -401,6 +401,64 @@ class ContractContract(models.Model):
             new_lines += contract_line_model.new(vals)
         new_lines._onchange_is_auto_renew()
         return new_lines
+    
+    def _prepare_invoice(self, date_invoice, journal=None):
+        """Prepare in a Form the values for the generated invoice record.
+
+        :return: A tuple with the vals dictionary and the Form with the
+          preloaded values for being used in lines.
+        """
+        self.ensure_one()
+        if not journal:
+            journal = (
+                self.journal_id
+                if self.journal_id.type == self.contract_type
+                else self.env["account.journal"].search(
+                    [
+                        ("type", "=", self.contract_type),
+                        ("company_id", "=", self.company_id.id),
+                    ],
+                    limit=1,
+                )
+            )
+        if not journal:
+            raise ValidationError(
+                _(
+                    "Please define a %(contract_type)s journal "
+                    "for the company '%(company)s'."
+                )
+                % {
+                    "contract_type": self.contract_type,
+                    "company": self.company_id.name or "",
+                }
+            )
+        invoice_type = "out_invoice"
+        if self.contract_type == "purchase":
+            invoice_type = "in_invoice"
+        move_form = Form(
+            self.env["account.move"]
+            .with_company(self.company_id)
+            .with_context(default_move_type=invoice_type, default_name="/"),
+            view="contract.view_account_move_contract_helper_form",
+        )
+        move_form.partner_id = self.invoice_partner_id
+        move_form.journal_id = journal
+        move_form.currency_id = self.currency_id
+        move_form.invoice_date = date_invoice
+        if self.payment_term_id:
+            move_form.invoice_payment_term_id = self.payment_term_id
+        if self.fiscal_position_id:
+            move_form.fiscal_position_id = self.fiscal_position_id
+        if invoice_type == "out_invoice" and self.user_id:
+            move_form.invoice_user_id = self.user_id
+        invoice_vals = move_form._values_to_save(all_fields=True)
+        invoice_vals.update(
+            {
+                "ref": self.code,
+                "invoice_origin": self.name,
+            }
+        )
+        return invoice_vals, move_form
 
     def _prepare_receipt(self, date_invoice, journal=None):
         """Prepare in a Form the values for the generated invoice record.
