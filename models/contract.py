@@ -137,6 +137,15 @@ class ContractContract(models.Model):
         inverse_name="contract_id",
         string="Modifications",
     )
+    
+    mp_flujo_id = fields.Many2one(comodel_name="mp.flujo", domain="[('grupo_flujo_ids', 'in', mp_grupo_flujo_id)]")
+    mp_grupo_flujo_ids = fields.Many2many(related="mp_flujo_id.grupo_flujo_ids")
+    mp_grupo_flujo_id = fields.Many2one(comodel_name="mp.grupo.flujo", domain="[]")
+    
+    @api.onchange("mp_grupo_flujo_id")
+    def _onchange_mp_flujo_id(self):
+        for register_id in self:
+            register_id.mp_flujo_id = self.env['mp.flujo']
 
     def get_formview_id(self, access_uid=None):
         if self.contract_type == "sale":
@@ -479,6 +488,9 @@ class ContractContract(models.Model):
             {
                 "ref": self.code,
                 "invoice_origin": self.name,
+                "mp_flujo_id": self.mp_flujo_id.id,
+                "mp_grupo_flujo_id": self.mp_grupo_flujo_id.id,
+                "mp_grupo_flujo_ids": self.mp_grupo_flujo_ids.ids,
             }
         )
         return invoice_vals, move_form

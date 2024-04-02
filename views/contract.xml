@@ -55,6 +55,9 @@
                             <field name="journal_id" required="1" attrs="{'readonly': [('is_terminated','=',True)]}"/>
                             <field name="journal_account_id"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="mp_grupo_flujo_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="mp_flujo_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="mp_grupo_flujo_ids" invisible="1"/>
                         </group>
                     </group>
                     <group name="recurring_invoices">
