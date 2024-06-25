@@ -21,6 +21,7 @@
         <field name="model">contract.contract</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="contract_code" string="Codigo"/>
                 <field name="name" string="Contrato"/>
                 <field name="partner_id" string="Proveedor"/>
                 <field name="journal_id" string="Diario Contable"/>

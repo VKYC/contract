@@ -13,6 +13,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tests import Form
 from odoo.tools.translate import _
+from datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -141,7 +142,13 @@ class ContractContract(models.Model):
     mp_flujo_id = fields.Many2one(comodel_name="mp.flujo", domain="[('grupo_flujo_ids', 'in', mp_grupo_flujo_id)]")
     mp_grupo_flujo_ids = fields.Many2many(related="mp_flujo_id.grupo_flujo_ids")
     mp_grupo_flujo_id = fields.Many2one(comodel_name="mp.grupo.flujo", domain="[]")
-    
+    contract_code = fields.Char(string="Código Contrato")
+
+    def generate_contract_sequence(self):
+        anio_actual = datetime.today().year
+        id_str = str(self.id)
+        self.contract_code = f"CUNT/{id_str}/{anio_actual}"
+
     @api.onchange("mp_grupo_flujo_id")
     def _onchange_mp_flujo_id(self):
         for register_id in self:
@@ -157,6 +164,7 @@ class ContractContract(models.Model):
     def create(self, vals_list):
         records = super().create(vals_list)
         records._set_start_contract_modification()
+        records.generate_contract_sequence()
         return records
 
     def write(self, vals):

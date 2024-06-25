@@ -35,7 +35,11 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label for="name" string="Contract Name" class="oe_edit_only"/>
+                        <label for="contract_code" string="Codigo de Contrato"/>
+                        <h2>
+                            <field name="contract_code" class="oe_inline" readonly="1"  force_save="1"/>
+                        </h2>
+                        <label for="name" string="Nombre" class="oe_edit_only"/>
                         <h3>
                             <field name="name" class="oe_inline" attrs="{'readonly': [('is_terminated','=',True)]}" placeholder="e.g. Contract XYZ"/>
                         </h3>
