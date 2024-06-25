@@ -11,10 +11,10 @@
 
 {
     "name": "Recurring - Contracts Management",
-    "version": "15.0.1.7.1",
+    "version": "15.0.1.7.2",
     "category": "Contract Management",
     "license": "AGPL-3",
-    "author": "Tecnativa, ACSONE SA/NV, Odoo Community Association (OCA)",
+    "author": "Tecnativa, ACSONE SA/NV, Odoo Community Association (OCA) | Adaptaciones: HOLDCO Networks - Baruc Alvarez",
     "website": "https://github.com/OCA/contract",
     "depends": ["base", "account", "product", "portal", "account_payment_flow"],
     "development_status": "Production/Stable",
