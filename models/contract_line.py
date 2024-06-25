@@ -564,6 +564,7 @@ class ContractLine(models.Model):
                 "contract_line_id": self.id,
                 "sequence": self.sequence,
                 "name": name,
+                "tax_ids": False,
                 "analytic_account_id": self.analytic_account_id.id,
                 "analytic_tag_ids": [(6, 0, self.analytic_tag_ids.ids)],
                 "price_unit": self.price_unit,
