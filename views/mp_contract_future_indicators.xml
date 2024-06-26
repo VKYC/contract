@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="mp_contract_future_indicators_view_tree" model="ir.ui.view">
+        <field name="name">Indicadores Futuros</field>
+        <field name="model">mp.contract.future.indicators</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date"/>
+                <field name="currency_id"/>
+                <field name="valor"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mp_contract_future_indicators_view_form" model="ir.ui.view">
+    <field name="name">Indicadores Futuros</field>
+    <field name="model">mp.contract.future.indicators</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group class="col-2">
+                    <field name="date"/>
+                    <field name="currency_id"/>
+                    <field name="valor"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+    <record id="action_mp_contract_future_indicators" model="ir.actions.act_window">
+        <field name="name">Indicadores Futuros</field>
+        <field name="res_model">mp.contract.future.indicators</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="mp_contract_future_indicators_view_tree"/>
+    </record>
+
+    <menuitem name="Indicadores Futuros" id="mp_contract_future_indicators_menu" action="action_mp_contract_future_indicators"
+              parent="contract.menu_contract_contract_parent_supplier" sequence="95"/>
+
+</odoo>

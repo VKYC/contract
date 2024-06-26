@@ -46,6 +46,7 @@
         "views/res_config_settings.xml",
         "views/contract_terminate_reason.xml",
         "views/contract_portal_templates.xml",
+        "views/mp_contract_future_indicators.xml",
     ],
     "assets": {
         "web.assets_backend": [
