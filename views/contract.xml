@@ -35,10 +35,10 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label for="contract_code" string="Codigo de Contrato"/>
-                        <h2>
-                            <field name="contract_code" class="oe_inline" readonly="1"  force_save="1"/>
-                        </h2>
+<!--                        <label for="contract_code" string="Codigo de Contrato"/> - Baruc Alvarez - Se comenta por cambio de vista-->
+<!--                        <h2>-->
+<!--                            <field name="contract_code" class="oe_inline" readonly="1"  force_save="1"/>-->
+<!--                        </h2>-->
                         <label for="name" string="Nombre" class="oe_edit_only"/>
                         <h3>
                             <field name="name" class="oe_inline" attrs="{'readonly': [('is_terminated','=',True)]}" placeholder="e.g. Contract XYZ"/>
@@ -251,7 +251,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="active" invisible="1"/>
-                <field name="contract_code" string="Codigo"/>
+<!--                <field name="contract_code" string="Codigo"/> - Baruc Alvarez - Se comenta por cambio de vista -->
                 <field name="name" string="Contrato"/>
                 <field name="partner_id" string="Proveedor"/>
                 <field name="journal_id" string="Diario Contable" groups="account.group_account_user"/>

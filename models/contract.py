@@ -142,12 +142,12 @@ class ContractContract(models.Model):
     mp_flujo_id = fields.Many2one(comodel_name="mp.flujo", domain="[('grupo_flujo_ids', 'in', mp_grupo_flujo_id)]")
     mp_grupo_flujo_ids = fields.Many2many(related="mp_flujo_id.grupo_flujo_ids")
     mp_grupo_flujo_id = fields.Many2one(comodel_name="mp.grupo.flujo", domain="[]")
-    contract_code = fields.Char(string="Código Contrato")
+    # contract_code = fields.Char(string="Código Contrato") - Baruc Alvarez - Se comenta por cambio de vista
 
-    def generate_contract_sequence(self):
-        anio_actual = datetime.today().year
-        id_str = str(self.id)
-        self.contract_code = f"CUNT/{id_str}/{anio_actual}"
+    # def generate_contract_sequence(self): - Baruc Alvarez - Se comenta por cambio de vista
+    #     anio_actual = datetime.today().year
+    #     id_str = str(self.id)
+    #     self.contract_code = f"CUNT/{id_str}/{anio_actual}"
 
     @api.onchange("mp_grupo_flujo_id")
     def _onchange_mp_flujo_id(self):
@@ -164,7 +164,7 @@ class ContractContract(models.Model):
     def create(self, vals_list):
         records = super().create(vals_list)
         records._set_start_contract_modification()
-        records.generate_contract_sequence()
+        # records.generate_contract_sequence() - Baruc Alvarez - Se comenta por cambio de vista
         return records
 
     def write(self, vals):
