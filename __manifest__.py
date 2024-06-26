@@ -46,9 +46,6 @@
         "views/res_config_settings.xml",
         "views/contract_terminate_reason.xml",
         "views/contract_portal_templates.xml",
-        "views/contract_report_customer_views.xml",
-        "views/contract_report_supplier_views.xml",
-        "views/contract_report_menuitem.xml",
     ],
     "assets": {
         "web.assets_backend": [

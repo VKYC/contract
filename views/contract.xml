@@ -250,12 +250,17 @@
         <field name="model">contract.contract</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name" string="Name"/>
-                <field name="code"/>
-                <field name="journal_id" groups="account.group_account_user"/>
-                <field name="partner_id"/>
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="active" invisible="1"/>
+                <field name="contract_code" string="Codigo"/>
+                <field name="name" string="Contrato"/>
+                <field name="partner_id" string="Proveedor"/>
+                <field name="journal_id" string="Diario Contable" groups="account.group_account_user"/>
+                <field name="journal_account_id" string="Cuenta Contable"/>
+                <field name="tag_ids" widget="many2many_tags" string="Etiquetas" options="{'color_field': 'color'}"/>
+                <field name="mp_flujo_id"/>
+                <field name="date_start" string="Inicio"/>
+                <field name="date_end" string="Fin"/>
+                <field name="recurring_next_date" string="Proxima Facturación"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -311,7 +316,9 @@
         <field name="view_id" ref="contract_contract_customer_form_view"/>
         <field name="act_window_id" ref="action_customer_contract"/>
     </record>
-    <menuitem id="menu_contract_contract_customer" parent="account.menu_finance_receivables" action="action_customer_contract" sequence="99"/>
+    <menuitem id="menu_contract_contract_parent_customer" name="Contratos de Clientes" parent="account.menu_finance_receivables" action="action_customer_contract"
+              sequence="90"/>
+    <menuitem id="menu_contract_contract_customer" parent="menu_contract_contract_parent_customer" action="action_customer_contract" sequence="99"/>
     <!--ACTION
     supplier contracts-->
     <record id="action_supplier_contract" model="ir.actions.act_window">
@@ -337,5 +344,6 @@
         <field name="view_id" ref="contract_contract_supplier_form_view"/>
         <field name="act_window_id" ref="action_supplier_contract"/>
     </record>
-    <menuitem id="menu_contract_contract_supplier" parent="account.menu_finance_payables" action="action_supplier_contract" sequence="99"/>
+    <menuitem id="menu_contract_contract_parent_supplier" name="Contratos de Proveedores" parent="account.menu_finance_payables" sequence="90"/>
+    <menuitem id="menu_contract_contract_supplier" parent="menu_contract_contract_parent_supplier" action="action_supplier_contract" sequence="99"/>
 </odoo>
