@@ -8,7 +8,6 @@
 # Copyright 2020-2021 Tecnativa - Pedro M. Baeza
 # Copyright 2020 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 {
     "name": "Recurring - Contracts Management",
     "version": "15.2.1.7.1",
@@ -32,13 +31,13 @@
         "data/template_mail_notification.xml",
         "data/mail_message_subtype.xml",
         "data/ir_ui_menu.xml",
+        "views/contract.xml",
         "wizards/contract_line_wizard.xml",
         "wizards/contract_manually_create_invoice.xml",
         "wizards/contract_contract_terminate.xml",
         "views/contract_tag.xml",
         "views/abstract_contract_line.xml",
         "views/account_move_views.xml",
-        "views/contract.xml",
         "views/contract_line.xml",
         "views/contract_template.xml",
         "views/contract_template_line.xml",
@@ -57,3 +56,4 @@
     },
     "installable": True,
 }
+
