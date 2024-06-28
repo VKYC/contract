@@ -10,7 +10,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "Recurring - Contracts Management",
-    "version": "15.2.1.7.1",
+    "version": "15.3.1.7.1",
     "category": "Contract Management",
     "license": "AGPL-3",
     "author": "Tecnativa, ACSONE SA/NV, Odoo Community Association (OCA) | Adaptaciones: HOLDCO Networks - Baruc Alvarez",
