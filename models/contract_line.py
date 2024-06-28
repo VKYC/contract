@@ -2,11 +2,12 @@
 # Copyright 2018 ACSONE SA/NV.
 # Copyright 2020 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
+import datetime
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
+from odoo import _, api, fields, models
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -545,6 +546,11 @@ class ContractLine(models.Model):
 
     def _prepare_invoice_line(self, move_form):
         self.ensure_one()
+        month_contract_date = datetime.date.today().replace(day=5)
+        value = self.env['mp.contract.future.indicators'].search(
+            [('currency_id', '=', self.contract_id.currency_id.id),
+             ('date', '>=', month_contract_date),
+             ('date', '<', month_contract_date.replace(day=1) + relativedelta(months=1))], limit=1)
         dates = self._get_period_to_invoice(
             self.last_date_invoiced, self.recurring_next_date
         )
@@ -567,7 +573,7 @@ class ContractLine(models.Model):
                     "name": name,
                     "analytic_account_id": self.analytic_account_id.id,
                     "analytic_tag_ids": [(6, 0, self.analytic_tag_ids.ids)],
-                    "price_unit": self.price_unit,
+                    "price_unit": self.price_unit * value.value
                 }
             )
         else:
@@ -585,7 +591,7 @@ class ContractLine(models.Model):
                     "tax_ids": False,
                     "analytic_account_id": self.analytic_account_id.id,
                     "analytic_tag_ids": [(6, 0, self.analytic_tag_ids.ids)],
-                    "price_unit": self.price_unit,
+                    "price_unit": self.price_unit * value.value
                 }
             )
         return invoice_line_vals

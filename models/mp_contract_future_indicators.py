@@ -8,6 +8,6 @@ class MPContractFutureIndicators(models.Model):
 
     date = fields.Date(string="Fecha del Indicador", default=lambda self: date.today())
     currency_id = fields.Many2one(comodel_name="res.currency", string="Moneda", domain=[('active', '=', True)])
-    valor = fields.Monetary(string="Valor de moneda")
+    value = fields.Monetary(string="Valor de moneda")
 
 
